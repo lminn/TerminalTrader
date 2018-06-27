@@ -6,7 +6,10 @@ from flask import Flask
 
 from core.controllers.featured import controller as featured
 from core.controllers.general import controller as general
-
+from core.controllers.portfolio import controller as portfolio
+from core.controllers.buy import controller as buy
+from core.controllers.sell import controller as sell
+from core.controllers.lookup import controller as lookup
 
 def keymaker(omnibus,filename='secret_key'):
     pathname = os.path.join(omnibus.instance_path,filename)
@@ -32,6 +35,10 @@ omnibus = Flask(__name__)
 
 omnibus.register_blueprint(featured)
 omnibus.register_blueprint(general)
+omnibus.register_blueprint(portfolio)
+omnibus.register_blueprint(buy)
+omnibus.register_blueprint(sell)
+omnibus.register_blueprint(lookup)
 
 
 # TODO Write the following function

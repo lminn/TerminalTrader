@@ -2542,6 +2542,14 @@ output {
   line-height: 1.42857143;
   color: #555;
 }
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}
+
+
 .form-control {
   display: block;
   width: 100%;
@@ -6394,6 +6402,18 @@ button.close {
 .visible-lg-inline-block {
   display: none !important;
 }
+
+.footer
+{
+    height: 50px;
+    background-color: black;
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+
 @media (max-width: 767px) {
   .visible-xs {
     display: block !important;
