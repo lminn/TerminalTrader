@@ -32,7 +32,7 @@ cursor.execute(
 		number_of_shares INTEGER, 
 		purchase_price FLOAT,
 		volume_weighted_average_price FLOAT,
-		portfolio_value FLOAT
+		portfolio_value FLOAT,
 		username TEXT
 	);"""
 )

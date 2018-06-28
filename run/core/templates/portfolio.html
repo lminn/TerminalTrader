@@ -54,11 +54,11 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                 <ul id="active" class="nav navbar-nav side-nav">
-                    <li><a href="dashboard"><i class="fa fa-bullseye"></i> Dashboard</a></li>
-                    <li class="selected"><a href="portfolio"><i class="fa fa-tasks"></i> Portfolio</a></li>
-                    <li><a href="buy"><i class="fa fa-globe"></i> Buy</a></li>
-                    <li><a href="sell"><i class="fa fa-list-ol"></i> Sell</a></li>
-                    <li><a href="lookup"><i class="fa fa-font"></i> Company Lookup</a></li>
+                    <li><a href="{{ url_for('dashboard.show_dashboard') }}"><i class="fa fa-bullseye"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('portfolio.show_portfolio') }}"><i class="fa fa-tasks"></i> Portfolio</a></li>
+                    <li><a href="{{ url_for('buy.show_buy') }}"><i class="fa fa-globe"></i> Buy</a></li>
+                    <li><a href="{{ url_for('sell.show_sell') }}"><i class="fa fa-list-ol"></i> Sell</a></li>
+                    <li class="selected"><a href="{{ url_for('lookup.show_lookup') }}"><i class="fa fa-font"></i> Company Lookup</a></li>
                 </ul>   
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">

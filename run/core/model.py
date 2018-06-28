@@ -5,6 +5,8 @@ import getpass
 import json
 import os
 import sqlite3 
+import traceback
+import sys
 
 import numpy as np
 import pandas as pd
@@ -26,11 +28,23 @@ def get_price_by_company(company_name):
 		ticker_symbol = wrapper.get_ticker_symbol(company_name) 
 		last_price = wrapper.get_last_price(ticker_symbol)
 	
-		print("\nCompany: ", company_name, "\nTicker Symbol: ", ticker_symbol, "\nLast Price: ${0}".format("%0.2f" % last_price))
-		exit = input("\n\nPress enter to continue to main menu...")
+		last_price = ("%0.2f" % last_price)
+		return last_price
 	except:
-		print("No data for {0} was found.".format(company_name))
-		exit = input("\n\nPress enter to continue to main menu...")
+		error_message = "No data for {0} was found.".format(company_name)
+		return error_message
+		
+
+def get_ticker_symbol(company_name):
+	""" Print ticker symbol and stock price.""" 
+
+	try: 
+		ticker_symbol = wrapper.get_ticker_symbol(company_name) 
+
+		return ticker_symbol
+	except:
+		error_message = "No data for {0} was found.".format(company_name)
+		return error_message
 
 
 def get_price_by_ticker_symbol(ticker_symbol):
@@ -39,17 +53,18 @@ def get_price_by_ticker_symbol(ticker_symbol):
 	try: 
 		last_price = wrapper.get_last_price(ticker_symbol)
 	
-		print("\nTicker Symbol:", ticker_symbol, "Last Price: ${0}".format("%0.2f" % last_price))
-		exit = input("\n\nPress enter to continue to main menu...")
+		last_price = ("%0.2f" % last_price)
+		return last_price
 	except:
-		print("No data for {0} was found.".format(ticker_symbol))
-		exit = input("\n\nPress enter to continue to main menu...")
+		error_message = "No data for {0} was found.".format(ticker_symbol)
+
 
 
 def buy(ticker_symbol, trade_volume, username):
 	""" Buy stock(s) given the ticker symbol and amount. """
 
 	try:
+		trade_volume = int(trade_volume)
 		brokerage_fee = 6.95
 		last_price = wrapper.get_last_price(ticker_symbol)
 
@@ -70,7 +85,7 @@ def buy(ticker_symbol, trade_volume, username):
 				vwap = last_price    
 				
 				ticker_symbol = ticker_symbol.strip()
-				mapper.add_holdings_record(ticker_symbol,trade_volume,last_price,username)   
+				mapper.add_holdings_record(ticker_symbol,trade_volume,last_price,username)  
 				new_balance = float(user_balance) - float(transaction_cost)
 				mapper.update_balance(username, new_balance)
 																											
@@ -91,25 +106,16 @@ def buy(ticker_symbol, trade_volume, username):
 			trans_date = datetime.datetime.now()
 			total = float(trade_volume) * float(last_price)
 			mapper.add_transaction(username,trans_date,'Buy', ticker_symbol,trade_volume,last_price,total)
-
 		
-			print("\nTransaction Complete\n\nYour new balance is: ",("%0.2f" %  new_balance))
-			exit_cue = input("\n\nPress enter to continue")
-			os.system('clear')
-
+			new_balance = ("%0.2f" %  new_balance)
+			return new_balance
 		else:
-			print('\nError: You do not have enough money to execute the trade')
-			exit = input("\n\nPress enter to continue")
-			os.system('clear')
+			error_message = ('You do not have enough funds to execute the trade')
+			return error_message 
 
-	except Exception:
-		selection = input("Something wasn't right with the information you supplied. \nEnter 1 to train again or 2 to return to the main menu.\n")
-		if selection == str(1):
-			ticker_symbol = input("\nTicker Symbol: ")
-			trade_volume = input("Trade volume: ")
-			buy(ticker_symbol, trade_volume, username)
-		else:
-			pass
+	except Exception as ex:
+		print(ex)
+
 		
 
 def sell(ticker_symbol, trade_volume, username):
@@ -148,28 +154,20 @@ def sell(ticker_symbol, trade_volume, username):
 				#mapper.update_holdings_record(username,ticker_symbol,cumulative_shares,last_price)
 
 
-				print("\nTransaction Complete\n\nYour new balance is: ", ("%0.2f" % new_balance))
-				exit = input("\n\nPress enter to continue")
-				os.system('Clear')
+				new_balance = ("%0.2f" %  new_balance)
+				return new_balance
 
 			else:
-				print("Error: You do not have enough shares of {0} to sell.".format(ticker_symbol))
-				exit = input("Press enter to continue")
-				os.system('Clear')
+				error_message = "You do not have enough shares of {0} to sell.".format(ticker_symbol)
+				return error_message
 
 
 		else:
-			print('\nYou do not own have any {0} shares to sell'.format(ticker_symbol))
-			exit = input("\nPlease press enter to continue")
-			os.system('Clear')
+			error_message = 'You do not own have any {0} shares to sell'.format(ticker_symbol)
+			return error_message
+
 	except Exception:
-		selection = input("Something wasn't right with the information you supplied. \nEnter 1 to train again or 2 to return to the main menu.\n")
-		if input == str(1):
-			ticker_symbol = input("\nTicker Symbol: ")
-			trade_volume = input("Trade volume: ")
-			sell(ticker_symbol, trade_volume, username)
-		else:
-			pass
+		print(ex)
 
 
 def get_portfolio_value(username):
@@ -260,32 +258,24 @@ def calculate_vwap(username, ticker_symbol):
 		return vwap
 
 
-def get_ticker_symbol(company_name):
-	""" Return ticker symbol given company name."""
+# def get_ticker_symbol(company_name):
+# 	""" Return ticker symbol given company name."""
 
-	ticker_symbol = wrapper.get_ticker_symbol(company_name)
-	if ticker_symbol != False:
-		print("\nTicker Symbol: {0}\n".format(ticker_symbol))
-	else:
-		pass
-	exit = input("\nPlease press enter to continue")
-	os.system('Clear')
-
-	return ticker_symbol
+# 	ticker_symbol = wrapper.get_ticker_symbol(company_name)
+# 	else:
+# 		pass
 
 
-def get_last_price(ticker_symbol):
-	""" Return last price given the ticker symbol."""
+# 	return ticker_symbol
 
-	last_price = wrapper.get_last_price(ticker_symbol)
-	if last_price != False:
-		print("\nLast Price: ${0}".format(last_price))
-	else:
-		pass
-	exit = input("\nPlease press enter to continue")
-	os.system('Clear')
-	
-	return last_price
+
+# def get_last_price(ticker_symbol):
+# 	""" Return last price given the ticker symbol."""
+
+# 	last_price = wrapper.get_last_price(ticker_symbol)
+# 	else:
+# 		pass
+# 	return last_price
 
 
 def display_balance(username):

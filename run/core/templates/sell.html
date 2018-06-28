@@ -43,11 +43,11 @@
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul id="active" class="nav navbar-nav side-nav">
-                    <li><a href="dashboard"><i class="fa fa-bullseye"></i> Dashboard</a></li>
-                    <li><a href="portfolio"><i class="fa fa-tasks"></i> Portfolio</a></li>
-                    <li><a href="buy"><i class="fa fa-globe"></i> Buy</a></li>
-                    <li class="selected"><a href="sell"><i class="fa fa-list-ol"></i> Sell</a></li>
-                    <li><a href="lookup"><i class="fa fa-font"></i> Company Lookup</a></li>
+                    <li ><a href="{{ url_for('dashboard.show_dashboard') }}"><i class="fa fa-bullseye"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('portfolio.show_portfolio') }}"><i class="fa fa-tasks"></i> Portfolio</a></li>
+                    <li><a href="{{ url_for('buy.show_buy') }}"><i class="fa fa-globe"></i> Buy</a></li>
+                    <li class="selected"><a href="{{ url_for('sell.show_sell') }}"><i class="fa fa-list-ol"></i> Sell</a></li>
+                    <li><a href="{{ url_for('lookup.show_lookup') }}"><i class="fa fa-font"></i> Company Lookup</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
                     <li class="dropdown messages-dropdown">
@@ -143,34 +143,46 @@
         <!------------------------------------ SELL INPUT -------------------------------------------->
 
             <!-- Need to dynamically get ticker symbols from API -->
+            <!-- Would also be nice to have a type look ahead -->
 
-        <div class="row" style="margin-top: 20px;">
-             <div class="col-lg-6">
-                <form role="form">
+
+            <div class="row" style="margin-top: 20px;">
+             <div class="col-lg-3">
+                <form role="form" action = "/sell/" method = "POST">
                     <div class="form-group">
                         <label>Ticker Symbol</label>
-                        <select class="form-control">
+                        <!--select class="form-control" name="ticker">
                             <option>TSLA</option>
                             <option>MSFT</option>
                             <option>AAPL</option>
                             <option>SHOO</option>
-                            <option>B</option>
+                            <option>B</option>-->
+                        <input class="form-control" name="ticker">
+
                         </select>
                     </div>
 
 
                     <div class="form-group">
                             <label>Volume</label>
-                            <input class="form-control">
+                            <input class="form-control" name="volume">
                     </div>
 
 
-                    <button type="submit" class="btn btn-primary">Submit Order</button>
-
-
+                    <button type="submit" value="submit"class="btn btn-primary">Submit Order</button>
                 </form>
             </div>
         </div>
+
+
+        {% if result %}
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-success">{{result}}</button>
+            </div>
+        </div>
+        {% endif %}
+            
 
     <!------------------------------------ END OF SELL INPUT ------------------------------------->
 

@@ -24,5 +24,5 @@ def get_ticker_symbol(company_name):
         ticker_symbol = response['Symbol']
         return ticker_symbol 
     except Exception:
-        print("There are not results for {0}".format(company_name))
+        #print("There are not results for {0}".format(company_name))
         return False

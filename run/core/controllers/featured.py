@@ -7,4 +7,4 @@ controller = Blueprint('featured',__name__,url_prefix='/featured')
 
 @controller.route('/',methods=['GET'])
 def show_featured():
-    return render_template('bootstrap-grid.html')
+    return render_template('bootstrap-elements.html')
