@@ -16,11 +16,17 @@
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url_for('static', filename='css/local.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url_for('static', filename='css/darkall.min.css') }}" rel="stylesheet" type="text/css" />
+
 
 
 
     <script src="{{ url_for('static', filename='scripts/jquery-1.10.2.min.js') }}" type="text/javascript"></script>
     <script src="{{ url_for('static', filename='scripts/bootstrap.min.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='scripts/shieldui-all.min.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='scripts/Chart.min.js') }}" type="text/javascript"></script>
+
+
 
     <style>
         img {
@@ -49,16 +55,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Back to Admin</a>
+                <a class="navbar-brand" href="{{ url_for('dashboard.show_dashboard') }}">Terminal Trader</a>
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                 <ul id="active" class="nav navbar-nav side-nav">
                     <li><a href="{{ url_for('dashboard.show_dashboard') }}"><i class="fa fa-bullseye"></i> Dashboard</a></li>
-                    <li><a href="{{ url_for('portfolio.show_portfolio') }}"><i class="fa fa-tasks"></i> Portfolio</a></li>
+                    <li class="selected"><a href="{{ url_for('portfolio.show_portfolio') }}"><i class="fa fa-tasks"></i> Portfolio</a></li>
                     <li><a href="{{ url_for('buy.show_buy') }}"><i class="fa fa-globe"></i> Buy</a></li>
                     <li><a href="{{ url_for('sell.show_sell') }}"><i class="fa fa-list-ol"></i> Sell</a></li>
-                    <li class="selected"><a href="{{ url_for('lookup.show_lookup') }}"><i class="fa fa-font"></i> Company Lookup</a></li>
+                    <li><a href="{{ url_for('lookup.show_lookup') }}"><i class="fa fa-font"></i> Company Lookup</a></li>
                 </ul>   
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
@@ -96,148 +102,241 @@
             </div>
         </nav>
 
-        <hr />
 
-        <div class="container">
+
+
+
+        <div id="page-wrapper">
             <div class="row">
-                <div class="text-center">
-                    <h1>Completed Projects</h1>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="well">
-                            <img class="thumbnail img-responsive" alt="Bootstrap template" src="http://www.prepbootstrap.com/Content/images/shared/houses/h9.jpg" />
-                            <span>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                                Excepteur sint occaecat cupidatat non proident, 
-                                sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </span>
+                <div class="col-lg-12">
+
+
+
+
+        <!----------------------------------------- Title -------------------------------------------->
+
+                    <h1>Portfolio</h1>
+                    
+
+         <!------------------------------------ END OF TITLE ------------------------------------------>
+
+
+
+
+
+        <!---------------------------------------- GRAPH --------------------------------------------->
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Portfolio Value</h3>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <img class="thumbnail img-responsive" alt="Bootstrap template" src="http://www.prepbootstrap.com/Content/images/shared/houses/h8.jpg" />
-                            <span>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                                Excepteur sint occaecat cupidatat non proident, 
-                                sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <img class="thumbnail img-responsive" alt="Bootstrap template" src="http://www.prepbootstrap.com/Content/images/shared/houses/h4.jpg" />
-                            <span>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                                Excepteur sint occaecat cupidatat non proident, 
-                                sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </span>
+                        <div class="panel-body">
+                            <div id="shieldui-chart1"></div>
+                            
+
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="well">
-                            <img class="thumbnail img-responsive" alt="Bootstrap template" src="http://www.prepbootstrap.com/Content/images/shared/houses/h7.jpg" />
-                            <span>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                                Excepteur sint occaecat cupidatat non proident, 
-                                sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </span>
+
+        <!------------------------------------ END OF GRAPH ------------------------------------------>  
+
+
+
+
+
+        <!------------------------------------- PIE CHART -------------------------------------------->     
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Portfolio Holdings</h3>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <img class="thumbnail img-responsive" alt="Bootstrap template" src="http://www.prepbootstrap.com/Content/images/shared/houses/h3.jpg" />
-                            <span>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                                Excepteur sint occaecat cupidatat non proident, 
-                                sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <img class="thumbnail img-responsive" alt="Bootstrap template" src="http://www.prepbootstrap.com/Content/images/shared/houses/h6.jpg" />
-                            <span>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                                Excepteur sint occaecat cupidatat non proident, 
-                                sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </span>
+                        <div class="panel-body">
+                            <div id="shieldui-chart2"  Width="200px" Height="400px"></div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="well">
-                            <img class="thumbnail img-responsive" alt="Bootstrap template" src="http://www.prepbootstrap.com/Content/images/shared/houses/h1.jpg" />
-                            <span>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                                Excepteur sint occaecat cupidatat non proident, 
-                                sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </span>
+
+        <!----------------------------------- END OF PIE CHART --------------------------------------->  
+
+
+
+
+
+        <!--------------------------------------- CHART ----------------------------------------------> 
+
+         <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Holdings </h3>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <img class="thumbnail img-responsive" alt="Bootstrap template" src="http://www.prepbootstrap.com/Content/images/shared/houses/h2.jpg" />
-                            <span>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                                Excepteur sint occaecat cupidatat non proident, 
-                                sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="well">
-                            <img class="thumbnail img-responsive" alt="Bootstrap template" src="http://www.prepbootstrap.com/Content/images/shared/houses/h5.jpg" />
-                            <span>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
-                                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                                Excepteur sint occaecat cupidatat non proident, 
-                                sunt in culpa qui officia deserunt mollit anim id est laborum
-                            </span>
+                            <div class="panel-body">
+                                <div id="shieldui-grid1"></div>
+                                    <div id="shieldui-grid1" role="grid" aria-readonly="true" class="sui-grid sui-grid-core">
+                                        <div class="sui-gridheader">
+                                            <table class="sui-table">
+                                                <colgroup>
+                                                    <col style="width:170px">
+                                                    <col>
+                                                    <col>
+                                                    <col>
+                                                </colgroup>
+                                                    <thead>
+                                                        <tr role="row" class="sui-columnheader">
+                                                            <th data-field="Source" role="columnheader" tabindex="-1" class="sui-headercell">
+                                                                <a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Ticker Symbol</a>
+                                                            </th>
+                                                            <th data-field="Amount" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Volume</a>
+                                                            </th>
+                                                            <th data-field="Percent" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Purchase Price</a>
+                                                            </th>
+                                                            <th data-field="Target" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Last Price</a>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for holding in user_holdings %}
+                                                    <tr class="sui-row" role="row">
+                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ holding.0 }}</td>
+                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ holding.1 }}</td>
+                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ holding.2 }}</td>
+                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ holding.3 }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                            </table>
+                                         </div>
+                                    </div>
+                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        <!------------------------------------- END OF CHART -----------------------------------------> 
+
+
+
+
     </div>
+    <!-- /#wrapper -->
+
+ 
+<script>
+ 
+   // bar chart data
+   //<canvas id="chart" width="200" height="100"></canvas>
+   // var barData = {
+   // labels : [{% for item in labels %}
+   //                "{{item}}",
+   //            {% endfor %}],
+   // datasets : [
+   //    {
+   //          fillColor: "rgba(151,187,205,0.2)",
+   //          strokeColor: "rgba(151,187,205,1)",
+   //          pointColor: "rgba(151,187,205,1)",
+   //          pointStrokeColor: "#fff",
+   //          pointHighlightFill: "#fff",
+   //          pointHighlightStroke: "rgba(151,187,205,1)",
+   //          bezierCurve : false,
+   //          data : [{% for item in portfolio_values %}
+   //                    {{item}},
+   //                  {% endfor %}]
+   //    }]
+   // }
+ 
+   //  Chart.defaults.global.animationSteps = 50;
+   //  Chart.defaults.global.tooltipYPadding = 16;
+   //  Chart.defaults.global.tooltipCornerRadius = 0;
+   //  Chart.defaults.global.tooltipTitleFontStyle = "normal";
+   //  Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+   //  Chart.defaults.global.animationEasing = "easeOutBounce";
+   //  Chart.defaults.global.responsive = true;
+   //  Chart.defaults.global.scaleLineColor = "black";
+   //  Chart.defaults.global.scaleFontSize = 16;
+ 
+   // // get bar chart canvas
+   // var mychart = document.getElementById("chart").getContext("2d");
+ 
+   // steps = 10
+   // max = {{ highest_price }}
+   // // draw bar chart
+   // var LineChartDemo = new Chart(mychart).Line(barData, {
+   //      scaleOverride: true,
+   //      scaleSteps: steps,
+   //      scaleStepWidth: Math.ceil(max / steps),
+   //      scaleStartValue: 0,
+   //      scaleShowVerticalLines: true,
+   //      scaleShowGridLines : true,
+   //      barShowStroke : true,
+   //      scaleShowLabels: true,
+   //      bezierCurve: false,
+ 
+   // });
+        jQuery(function ($) {
+            var performance = {{portfolio_values}},
+                percentages = [{% for item in percentages %}
+                                            ['{{item.0}}', {{item.1}}],
+                                        {% endfor %}];
+
+            $("#shieldui-chart1").shieldChart({
+                theme: "dark",
+
+                primaryHeader: {
+                    text: ""
+                },
+                axisX: {
+                    categoricalValues: [{% for item in labels %}
+                                            "{{item}}",
+                                        {% endfor %}],
+                },
+
+                exportOptions: {
+                    image: false,
+                    print: false
+                },
+                dataSeries: [{
+                    seriesType: "area",
+                    collectionAlias: " Value",
+                    data: performance
+
+                }]
+            });
+
+            $("#shieldui-chart2").shieldChart({
+                theme: "dark",
+                primaryHeader: {
+                    text: "Holdings"
+                },
+                exportOptions: {
+                    image: false,
+                    print: false
+                },
+                dataSeries: [{
+                    seriesType: "pie",
+                    collectionAlias: "Ticker Symbol",
+                    data: percentages
+                    
+                }]
+                
+            });
+
+        window.onload = function() {
+        $( "tspan:contains('Demo Version')" ).hide();
+        $( "tspan:contains('Demo')" ).hide();
+    };
+
+  
+});
+ 
+ 
+</script>
 
 </body>
 </html>

@@ -137,7 +137,8 @@ def get_transactions_by_user(username):
                             ticker_symbol,
                             trans_type, 
                             volume, 
-                            stock_price 
+                            stock_price,
+                            portfolio_value
                             FROM transactions 
                             WHERE username='{0}'  
                             ORDER BY trans_date DESC;""".format(
@@ -188,7 +189,7 @@ def get_transactions_by_date(date):
     return transactions
 
 
-def add_transaction(username,trans_date,trans_type,ticker_symbol,volume,stock_price,total_amount):
+def add_transaction(username,trans_date,trans_type,ticker_symbol,volume,stock_price,total_amount,new_balance):
     """ Insert a new record into the transaction table."""
 
     connection, cursor = connect_db()
@@ -199,20 +200,23 @@ def add_transaction(username,trans_date,trans_type,ticker_symbol,volume,stock_pr
                         volume,
                         stock_price,
                         total_amount,
-                        username) VALUES(
+                        username,
+                        portfolio_value) VALUES(
 						'{trans_date}', 
                         '{trans_type}',
                         '{ticker_symbol}',
                         {volume},
                         {stock_price},
                         {total_amount},
-                        '{username}');""".format(trans_date=trans_date,
+                        '{username}',
+                        {new_balance});""".format(trans_date=trans_date,
                             trans_type=trans_type,
                             ticker_symbol=ticker_symbol,
                             volume=volume,
                             stock_price=stock_price,
                             total_amount=total_amount,
-                            username=username))
+                            username=username,
+                            new_balance=new_balance))
     disconnect_db(connection,cursor)
 
 

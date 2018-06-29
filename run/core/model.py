@@ -33,7 +33,7 @@ def get_price_by_company(company_name):
 	except:
 		error_message = "No data for {0} was found.".format(company_name)
 		return error_message
-		
+
 
 def get_ticker_symbol(company_name):
 	""" Print ticker symbol and stock price.""" 
@@ -57,7 +57,47 @@ def get_price_by_ticker_symbol(ticker_symbol):
 		return last_price
 	except:
 		error_message = "No data for {0} was found.".format(ticker_symbol)
+		return error_message
 
+def lookup_stock_details(company):
+	""" Lookup stock details given company name/ticker""" 
+
+	try:
+		""" Try lookup given company name"""
+		print("Trying company name")
+		ticker_symbol = wrapper.get_ticker_symbol(company)
+		company_details = wrapper.get_company_details(ticker_symbol)
+
+
+		return company_details
+
+	except Exception:
+		try:
+
+			""" Try lookup given ticker symbol"""
+			print("Trying ticker_symbol")
+
+			ticker_symbol = company
+
+			company_details = wrapper.get_company_details(ticker_symbol)
+
+
+			return company_details
+
+		except:
+			return False 
+
+def get_time_series(company):
+	""" Return  closing prices for the last year for a stock 
+		given the comapny name. 
+
+	""" 
+
+	ticker_symbol = wrapper.get_ticker_symbol(company)
+
+	series_data = wrapper.get_time_series(ticker_symbol)
+
+	return series_data
 
 
 def buy(ticker_symbol, trade_volume, username):
@@ -105,7 +145,7 @@ def buy(ticker_symbol, trade_volume, username):
 			# Record the transaction
 			trans_date = datetime.datetime.now()
 			total = float(trade_volume) * float(last_price)
-			mapper.add_transaction(username,trans_date,'Buy', ticker_symbol,trade_volume,last_price,total)
+			mapper.add_transaction(username,trans_date,'Buy', ticker_symbol,trade_volume,last_price,total,new_balance)
 		
 			new_balance = ("%0.2f" %  new_balance)
 			return new_balance
@@ -216,23 +256,8 @@ def display_holdings_for_user(username):
 
 	#Organize accounts in dataframe
 	data = [ticker_symbols, share_amounts, purchase_prices, last_prices]
-	df = pd.DataFrame(data)
-	if df.empty == True:
-		print("\n","\nYou have not made any purchases.\n")
-	else:
-		df1 = df.transpose()
-		df1.columns = ['Ticker Symbol', 'Volume', 'Purchase Price','Current Price']
-		df1.set_index('Ticker Symbol')
-		print("\n\n", df1.to_string(),"\n\n")
-	
+	return ticker_symbols, share_amounts, purchase_prices, last_prices
 
-	next = input("1. Get ROI  2. Go Back to Main Menu")
-	if next == str(1):
-		get_portfolio_return(username)
-		exit = input('\nPress enter to continue.')
-	if next == 2:
-		pass
-	os.system('Clear')
 
 
 def calculate_vwap(username, ticker_symbol):
@@ -399,6 +424,50 @@ def get_holdings(selection):
 	if selection == "4":
 		pass
 
+def get_portfolio_value_over_time(username):
+	""" Return the portfolio values for each date in the transactions table."""
+	values = mapper.get_transactions_by_user(username)
+
+	if not(values is None): 
+		dates = []
+		portfolio_values = []
+		data_points = []
+
+		for row in values:
+			date = row[1]
+			date = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S.%f")
+			date = date.date()
+			dates.append(date)
+			portfolio_value = row[6]
+			portfolio_values.append(portfolio_value)
+
+		return dates, portfolio_values
+
+	else:
+		pass
+
+
+def get_portfolio_percentage(username):
+	""" Return a list of each ticker symbol and corresponding percentage for the portfolio volume."""
+	ticker_symbols, share_amounts, purchase_prices, last_prices = display_holdings_for_user(username)
+
+	print(share_amounts)
+
+	percentages = []
+	total = sum(share_amounts)
+	print(total)
+
+	total_percentage = 0
+	for ticker, volume in zip(ticker_symbols, share_amounts):
+		percentage = (volume/total) * 100
+		percentage = round(percentage, 2)
+		total_percentage = total_percentage + percentage
+		print(total_percentage)
+		percentages.append([ticker,percentage])
+
+	return percentages
+
+
 def get_current_user_holdings(username):
 	""" Display holdings for the current user."""
 	
@@ -427,6 +496,7 @@ def get_current_user_holdings(username):
 			
 		#Organize accounts in dataframe
 		data = [ticker_symbols, share_amounts, purchase_prices]
+
 		df = pd.DataFrame(data)
 		if df.empty == True:
 			print("\n","\nThere are no items in your portfolio.\n")
@@ -743,3 +813,10 @@ if __name__ == '__main__':
 	#login()
 	#get_price_by_company("Facebook")
 	print(get_portfolio_return('lindsayminnock'))
+
+
+
+
+
+
+
