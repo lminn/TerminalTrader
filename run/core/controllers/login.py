@@ -2,14 +2,14 @@
 
 import secrets 
 
-from flask import Blueprint, render_template, request, make_response, g, session,redirect, url_for
+from flask import Blueprint, render_template, request, make_response, g, session, redirect, url_for
 
 from core import model
 
 
 
 
-controller = Blueprint('general',__name__,url_prefix='/')
+controller = Blueprint('login',__name__,url_prefix='/login')
 controller.secret_key = secrets.token_hex(16) 
 
 # app = Flask('general',__name__,url_prefix='/')
@@ -24,13 +24,10 @@ def show_login():
 		password = request.form['password']
 
 		try:
-			print("Logging in")
 			admin, username = model.login(username,password)
 			session['user'] = request.form['email']
-			print("Trying to login")
 			user_login = model.get_username(username)
-			print(user_login)
-			return redirect(url_for('dashboard.show_dashboard'))
+			return render_template('dashboard.html', user_login=user_login)
 		except Exception:
 			error_message = "Incorrect username or password."
 			return render_template('login.html')
@@ -42,9 +39,7 @@ def show_login():
 @controller.route('/home')
 def show_home():
 	if g.user:
-		#user_login = model.get_username(username)
-		g.user = current_user
-		return render_template('dashboard.html', user_login=user_login)	
+		return render_template('dashboard.html')	
 	return render_template('login.html')
 
 

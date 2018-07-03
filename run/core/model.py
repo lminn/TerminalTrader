@@ -18,7 +18,49 @@ from core import wrapper
 
 
 
-width = os.get_terminal_size().columns
+
+
+def get_username(email):
+	"""Return the username given an email for user login""" 
+
+	username_list = mapper.get_username(email)
+	username = username_list[0][0]
+	username = username.title()
+	print(username)
+
+	return username
+
+
+
+def new_user(username, email, password, country, gender):
+	"""Return the username given an email for user login""" 
+	
+
+	usernames = mapper.get_username(username)
+	emails = mapper.get_email(email)
+
+	if len(usernames) > 0:
+		form_error_message = "There is already an account with that username"
+		return False, form_error_message
+	elif len(emails) > 0:
+		form_error_message = "There is already an account with that email address"
+		return False, form_error_message
+	elif len(password) < 8: 
+		form_error_message = "Password needs to be at least 8 characters"
+		return False, form_error_message
+	else:
+		pass
+
+
+	try: 
+		mapper.add_new_user(username, email, password, country, gender)
+		validation_message = "Account created successfully"
+		return True, validation_message
+	except:
+		error_message = "The account could not be added."
+		return False, error_message
+
+
 
 
 def get_price_by_company(company_name):
@@ -407,6 +449,43 @@ def get_transactions(selection):
 		pass
 
 
+
+def get_user_transactions(username):
+	""" Return transactions for given user."""
+
+	transactions = mapper.get_transactions_by_user(username)
+
+	usernames = []
+	trans_dates = []
+	ticker_symbols = []
+	trans_types = []
+	volumes = []
+	stock_prices = []
+	portfolio_values = []
+
+	for row in transactions:
+		username = row[0]
+		usernames.append(username)
+		date = row[1]
+		trans_datetime = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S.%f')
+		trans_date = trans_datetime.date()
+		trans_date = trans_date.strftime('%m-%d-%Y')
+		trans_dates.append(trans_date)
+		ticker_symbol = row[2]
+		ticker_symbols.append(ticker_symbol)
+		trans_type = row[3]
+		trans_types.append(trans_type)
+		volume = row[4]
+		volumes.append(volume)
+		stock_price = row[5]
+		stock_prices.append(stock_price)
+		portfolio_value = row[6]
+		portfolio_values.append(portfolio_value)
+
+	return trans_dates, ticker_symbols, trans_types, volumes, stock_prices
+
+
+
 def get_holdings(selection):
 	""" Return holdings results for given selection."""
 
@@ -683,19 +762,21 @@ def get_leaderboard_by_portfolio_value():
 		scores.append(portfolio_value)
 
 		
+
+	return leaders, scores
 	#Organize accounts in dataframe
-	data = [leaders, scores]
-	df = pd.DataFrame(data)
-	if df.empty == True:
-		print("\n","\nNo leaders.\n")
-	else:
-		df1 = df.transpose()
-		df1.columns = ['User','Score']
-		df2 = df1.sort_values(by=['Score'],ascending=False)
-		df2.shift()[1:]
-		df3 = df2.head(10)
-		df4 = df3.to_string(index=False).center(80)
-		print("\n\n", df4,"\n\n")
+	# data = [leaders, scores]
+	# df = pd.DataFrame(data)
+	# if df.empty == True:
+	# 	print("\n","\nNo leaders.\n")
+	# else:
+	# 	df1 = df.transpose()
+	# 	df1.columns = ['User','Score']
+	# 	df2 = df1.sort_values(by=['Score'],ascending=False)
+	# 	df2.shift()[1:]
+	# 	df3 = df2.head(10)
+	# 	df4 = df3.to_string(index=False).center(80)
+	# 	print("\n\n", df4,"\n\n")
 	
 
 
@@ -812,7 +893,7 @@ if __name__ == '__main__':
 	#get_leaderboard()
 	#login()
 	#get_price_by_company("Facebook")
-	print(get_portfolio_return('lindsayminnock'))
+	print(get_user_transactions('lindsay@aol.com'))
 
 
 

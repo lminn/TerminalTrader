@@ -17,11 +17,11 @@ def show_lookup():
 		
 		company_details = model.lookup_stock_details(company)
 		series_data = model.get_time_series(company)
-		open_prices = series_data[1]
-		print(open_prices)
-		labels = series_data[2]
-		print(labels)
-
+		try:
+			open_prices = series_data[1]
+			labels = series_data[2]
+		except Exception: 
+			pass
 
 		return render_template('lookup.html', company_details=company_details, open_prices=open_prices, labels=labels)
 	else:

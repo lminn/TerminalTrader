@@ -28,6 +28,7 @@
 
 
 
+
     <style>
         img {
             filter: gray; /* IE6-9 */
@@ -134,8 +135,7 @@
                         </div>
                         <div class="panel-body">
                             <div id="shieldui-chart1"></div>
-                            
-
+                            <!-- <canvas class="my-4 w-100" id="myChart" width="800" height="320"></canvas> -->
                         </div>
                     </div>
                 </div>
@@ -168,7 +168,7 @@
 
         <!--------------------------------------- CHART ----------------------------------------------> 
 
-         <div class="col-lg-12">
+        <div class="col-lg-12">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-primary">
@@ -219,8 +219,68 @@
                 </div>
             </div>
 
+
         <!------------------------------------- END OF CHART -----------------------------------------> 
 
+
+
+
+        <!--------------------------------------- CHART ----------------------------------------------> 
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Transactions </h3>
+                        </div>
+                            <div class="panel-body">
+                                <div id="shieldui-grid1"></div>
+                                    <div id="shieldui-grid1" role="grid" aria-readonly="true" class="sui-grid sui-grid-core">
+                                        <div class="sui-gridheader">
+                                            <table class="sui-table">
+                                                <colgroup>
+                                                    <col style="width:170px">
+                                                    <col>
+                                                    <col>
+                                                    <col>
+                                                </colgroup>
+                                                    <thead>
+                                                        <tr role="row" class="sui-columnheader">
+                                                            <th data-field="Source" role="columnheader" tabindex="-1" class="sui-headercell">
+                                                                <a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Date</a>
+                                                            </th>
+                                                            <th data-field="Amount" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Ticker Symbol</a>
+                                                            </th>
+                                                            <th data-field="Percent" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Way</a>
+                                                            </th>
+                                                            <th data-field="Target" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Volume</a>
+                                                            </th>
+                                                            <th data-field="Target" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Price</a>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for transaction in user_transactions %}
+                                                    <tr class="sui-row" role="row">
+                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.0 }}</td>
+                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.1 }}</td>
+                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.2 }}</td>
+                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.3 }}</td>
+                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.4 }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                            </table>
+                                         </div>
+                                    </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        <!------------------------------------- END OF CHART -----------------------------------------> 
 
 
 
@@ -279,6 +339,11 @@
    //      bezierCurve: false,
  
    // });
+
+
+
+
+
         jQuery(function ($) {
             var performance = {{portfolio_values}},
                 percentages = [{% for item in percentages %}

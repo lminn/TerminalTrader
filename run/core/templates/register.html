@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
 
-    <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="static/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="static/css/local.css" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }} " />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/local.css') }}" />
 
     <script type="text/javascript" src="static/scripts/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="static/scripts/bootstrap.min.js"></script>
@@ -24,7 +24,8 @@
 <body>
 
     <div id="wrapper">
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container center_div">
+<!--         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -81,82 +82,51 @@
                 </ul>
             </div>
         </nav>
-
-       <div>
-        <div class="row text-center">
-            <h2>New Registration</h2>
-        </div>
-        <div>
-            <label for="firstname" class="col-md-2">
-                First Name:
+ -->
+     <div class="row" style="center">
+                <div class="col-lg-12">
+            <h2>Create an Account </h2>
+            <br>
+    <form class="form-inline" role="form"  action ="/register/" method ="POST">
+        <div class="form-group">
+            <label for="username" class="col-md-4">
+                Username:
             </label>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="firstname" placeholder="Enter First Name">
-            </div>
-            <div class="col-md-1">
-                <i class="fa fa-lock fa-2x"></i>
-            </div>
-        </div>        
-        <div>
-            <label for="lastname" class="col-md-2">
-                Last Name:
-            </label>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="lastname" placeholder="Enter Last Name">
-            </div>
-             <div class="col-md-1">
-                <i class="fa fa-lock fa-2x"></i>
-            </div>
-        </div>
-        <div>
-            <label for="emailaddress" class="col-md-2">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username">
+                <i class="fa fa-lock fa-2x"></i>  
+            <br><br>     
+            <label for="emailaddress" class="col-md-4">
                 Email address:
             </label>
-            <div class="col-md-9">
-                <input type="email" class="form-control" id="emailaddress" placeholder="Enter email address">
-                <p class="help-block">
-                    Example: yourname@domain.com
-                </p>
-            </div>
-             <div class="col-md-1">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address">
                 <i class="fa fa-lock fa-2x"></i>
-            </div>
-        </div>
-        <div>
-            <label for="password" class="col-md-2">
+            <br><br> 
+            <label for="password" class="col-md-4">
                 Password:
             </label>
-            <div class="col-md-9">
-                <input type="password" class="form-control" id="password" placeholder="Enter Password">
-                <p class="help-block">
-                    Min: 6 characters (Alphanumeric only)
-                </p>
-            </div>
-             <div class="col-md-1">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
                 <i class="fa fa-lock fa-2x"></i>
-            </div>
-        </div>
-        <div>
-            <label for="sex" class="col-md-2">
+<!--                 <p class="help-block">
+                    Min: 6 characters (Alphanumeric only)
+                </p> -->
+            <br><br>
+            <label for="sex" class="col-md-4">
                 Gender:
             </label>
-            <div class="col-md-10">
                 <label class="radio">
-                    <input type="radio" name="sex" id="sex" value="male" checked>
+                    <input type="radio" name="gender" id="sex" name="gender" value="male" checked>
                     Male
                 </label>
                 <label class="radio">
-                    <input type="radio" name="sex" id="Radio1" value="female">
+                    <input type="radio" name="gender" id="Radio1" name="gender" value="female">
                     Female
-                </label>
-            </div>             
-        </div>
-        <div>
-            <label for="country" class="col-md-2">
+                </label> 
+            <br><br>         
+            <label for="country" class="col-md-4">
                 Country:
             </label>
-            <div class="col-md-9">
-                <select name="country" id="country" class="form-control">
+
+                <select name="country" id="country" name="country" class="form-control">
                     <option>--Please Select--</option>
                     <option>India</option>
                     <option>United States</option>
@@ -164,38 +134,59 @@
                     <option>United Kingdom</option>
                     <option>Others</option>
                 </select>
-            </div>            
-        </div>
-        <div>
-            <label for="uploadimage" class="col-md-2">
+           <br><br>
+            <label for="uploadimage" class="col-md-4">
                 Upload Image:
             </label>
-            <div class="col-md-10">
                 <input type="file" name="uploadimage" id="uploadimage">
-                <p class="help-block">
+                <p class="help-block" style="margin-left: 160px;">
                     Allowed formats: jpeg, jpg, gif, png
                 </p>
-            </div>          
-        </div>
+                     
+
+
         <div>
             <div class="col-md-2">
             </div>
-            <div class="col-md-10">
+
+            <div class="col-lg-12">
                 <label>
-                    <input type="checkbox">I hereby accept the terms and conditions for using this site</label>
+                    <input type="checkbox">  I hereby accept the terms and conditions for using this site</label>
             </div>            
         </div>
+            {% if validation == false %}
+    <div class="row">
+          <div class="col-lg-6">
+            <div class="alert alert-dismissable alert-danger">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <strong> {{ message }} </strong>
+            </div>
+          </div>
+    {% endif %}
+
+    
         <div class="row">
             <div class="col-md-2">
             </div>
             <div class="col-md-10">
-                <button type="submit" class="btn btn-info">
+                <button type="submit" class="btn btn-info"> 
                     Register
                 </button>
             </div>
         </div>
     </div>  
     </div>
+</div>
+    </form>
+
+{% if validation == true %}
+    <div class="col-lg-4">
+            <div class="alert alert-dismissable alert-success">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <strong> {{ message }} </strong>
+            </div>
+          </div>
+    {% endif %}
 
 </body>
 </html>

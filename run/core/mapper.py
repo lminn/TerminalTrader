@@ -5,6 +5,32 @@ import sqlite3
 from core import model
 
 
+def add_new_user(username,email,password,country,gender):
+    """Insert new user account into users table."""
+
+    connection, cursor = connect_db()
+    cursor.execute("""INSERT INTO users(username,
+                            email,
+                            password,
+                            balance,
+                            country,
+                            gender) VALUES(
+                            '{username}',
+                            '{email}',
+                            '{password}',
+                            {balance},
+                            '{country}',
+                            '{gender}');""".format(
+                                username=username,
+                                email=email,
+                                password=password,
+                                balance=10000,
+                                country=country,
+                                gender=gender
+                                ))
+    disconnect_db(connection,cursor)
+
+
 
 def get_holdings_record(username, ticker_symbol):
     """ Return a record for the given company from the holdings table."""
@@ -20,6 +46,7 @@ def get_holdings_record(username, ticker_symbol):
     disconnect_db(connection,cursor)
 
     return holdings_record
+
 
 
 def get_user_holdings(username):
@@ -284,7 +311,7 @@ def get_password(username):
     """ Return the password for the given user from the users table."""
 
     connection, cursor = connect_db()
-    cursor.execute("SELECT password FROM users WHERE username='{username}';".format(username=username))
+    cursor.execute("SELECT password FROM users WHERE email='{username}';".format(username=username))
     password = cursor.fetchall()
     disconnect_db(connection,cursor)
 
@@ -302,6 +329,17 @@ def get_username(username):
     return username
 
 
+def get_email(email):
+    """ Check if there is already an account with that email."""
+
+    connection, cursor = connect_db()
+    cursor.execute("SELECT * FROM users WHERE email='{email}';".format(email=email))
+    username = cursor.fetchall()
+    disconnect_db(connection,cursor)
+
+    return username
+
+
 def get_users():
     """ Returns all users in the table."""
     
@@ -311,6 +349,17 @@ def get_users():
     disconnect_db(connection,cursor)
 
     return usernames
+
+
+def get_username(email):
+    """ Returns username for a user given the login email."""
+    
+    connection, cursor = connect_db()
+    cursor.execute("SELECT username FROM users where email='{email}';".format(email=email))
+    username = cursor.fetchall()
+    disconnect_db(connection,cursor)
+
+    return username
 
 
 def add_user(username, password, balance):

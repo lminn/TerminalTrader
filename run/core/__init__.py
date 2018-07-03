@@ -11,6 +11,9 @@ from core.controllers.buy import controller as buy
 from core.controllers.sell import controller as sell
 from core.controllers.lookup import controller as lookup
 from core.controllers.dashboard import controller as dashboard
+from core.controllers.logout import controller as logout
+from core.controllers.register import controller as register
+
 
 
 def keymaker(omnibus,filename='secret_key'):
@@ -42,6 +45,10 @@ omnibus.register_blueprint(buy)
 omnibus.register_blueprint(sell)
 omnibus.register_blueprint(lookup)
 omnibus.register_blueprint(dashboard)
+omnibus.register_blueprint(logout)
+omnibus.register_blueprint(register)
+
+
 
 
 
