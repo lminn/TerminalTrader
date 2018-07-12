@@ -18,6 +18,7 @@
     <link href="{{ url_for('static', filename='css/local.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url_for('static', filename='css/darkall.min.css') }}" rel="stylesheet" type="text/css" />
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
 
 
@@ -56,16 +57,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('dashboard.show_dashboard') }}">Terminal Trader</a>
+                <a class="navbar-brand" href="{{ url_for('dashboard.show_dashboard') }}">Web Trader</a>
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                 <ul id="active" class="nav navbar-nav side-nav">
-                    <li><a href="{{ url_for('dashboard.show_dashboard') }}"><i class="fa fa-bullseye"></i> Dashboard</a></li>
-                    <li class="selected"><a href="{{ url_for('portfolio.show_portfolio') }}"><i class="fa fa-tasks"></i> Portfolio</a></li>
+                    <li><a href="{{ url_for('dashboard.show_dashboard') }}"><i class="fa fa-globe"></i> Dashboard</a></li>
+                    <li class="selected"><a href="{{ url_for('portfolio.show_portfolio') }}"><i class="fa fa-globe"></i> Portfolio</a></li>
                     <li><a href="{{ url_for('buy.show_buy') }}"><i class="fa fa-globe"></i> Buy</a></li>
-                    <li><a href="{{ url_for('sell.show_sell') }}"><i class="fa fa-list-ol"></i> Sell</a></li>
-                    <li><a href="{{ url_for('lookup.show_lookup') }}"><i class="fa fa-font"></i> Company Lookup</a></li>
+                    <li><a href="{{ url_for('sell.show_sell') }}"><i class="fa fa-globe"></i> Sell</a></li>
+                    <li><a href="{{ url_for('orders.show_orders') }}"><i class="fa fa-globe"></i> Orders</a></li>
+                    <li><a href="{{ url_for('lookup.show_lookup') }}"><i class="fa fa-globe"></i> Company Lookup</a></li>
                 </ul>   
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
@@ -91,13 +93,19 @@
                         </ul>
                     </li>
                     <li class="dropdown user-dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Steve Miller<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>{{user_login}}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
                             <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
                             <li class="divider"></li>
-                            <li><a href="#"><i class="fa fa-power-off"></i> Log Out</a></li>
+                            <li><a href="{{ url_for('logout.logout') }}"><i class="fa fa-power-off"></i> Log Out</a></li>
                         </ul>
+                    </li>
+                      <li class="divider-vertical"></li>
+                    <li>
+                        <form class="navbar-search">
+                            <input type="text" placeholder="Search" class="form-control">
+                        </form>
                     </li>
                 </ul>
             </div>
@@ -123,7 +131,7 @@
 
 
 
-
+         {% if portfolio_values %}
 
         <!---------------------------------------- GRAPH --------------------------------------------->
 
@@ -222,67 +230,7 @@
 
         <!------------------------------------- END OF CHART -----------------------------------------> 
 
-
-
-
-        <!--------------------------------------- CHART ----------------------------------------------> 
-
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-bar-chart-o"></i> Transactions </h3>
-                        </div>
-                            <div class="panel-body">
-                                <div id="shieldui-grid1"></div>
-                                    <div id="shieldui-grid1" role="grid" aria-readonly="true" class="sui-grid sui-grid-core">
-                                        <div class="sui-gridheader">
-                                            <table class="sui-table">
-                                                <colgroup>
-                                                    <col style="width:170px">
-                                                    <col>
-                                                    <col>
-                                                    <col>
-                                                </colgroup>
-                                                    <thead>
-                                                        <tr role="row" class="sui-columnheader">
-                                                            <th data-field="Source" role="columnheader" tabindex="-1" class="sui-headercell">
-                                                                <a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Date</a>
-                                                            </th>
-                                                            <th data-field="Amount" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Ticker Symbol</a>
-                                                            </th>
-                                                            <th data-field="Percent" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Way</a>
-                                                            </th>
-                                                            <th data-field="Target" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Volume</a>
-                                                            </th>
-                                                            <th data-field="Target" role="columnheader" tabindex="-1" class="sui-headercell"><a href="#" class="sui-link sui-unselectable" unselectable="on" tabindex="-1">Price</a>
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {% for transaction in user_transactions %}
-                                                    <tr class="sui-row" role="row">
-                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.0 }}</td>
-                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.1 }}</td>
-                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.2 }}</td>
-                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.3 }}</td>
-                                                        <td role="gridcell" tabindex="-1" class="sui-cell">{{ transaction.4 }}</td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                            </table>
-                                         </div>
-                                    </div>
-                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-        <!------------------------------------- END OF CHART -----------------------------------------> 
-
-
+        {% endif %}
 
     </div>
     <!-- /#wrapper -->
@@ -357,7 +305,7 @@
                     text: ""
                 },
                 axisX: {
-                    categoricalValues: [{% for item in labels %}
+                    categoricalValues: [{% for item in dates %}
                                             "{{item}}",
                                         {% endfor %}],
                 },

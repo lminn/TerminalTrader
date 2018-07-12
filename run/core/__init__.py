@@ -13,6 +13,8 @@ from core.controllers.lookup import controller as lookup
 from core.controllers.dashboard import controller as dashboard
 from core.controllers.logout import controller as logout
 from core.controllers.register import controller as register
+from core.controllers.orders import controller as orders
+
 
 
 
@@ -47,6 +49,7 @@ omnibus.register_blueprint(lookup)
 omnibus.register_blueprint(dashboard)
 omnibus.register_blueprint(logout)
 omnibus.register_blueprint(register)
+omnibus.register_blueprint(orders)
 
 
 

@@ -11,6 +11,7 @@ import sys
 import numpy as np
 import pandas as pd
 import requests
+import operator 
 
 
 from core import mapper
@@ -23,12 +24,15 @@ from core import wrapper
 def get_username(email):
 	"""Return the username given an email for user login""" 
 
-	username_list = mapper.get_username(email)
-	username = username_list[0][0]
-	username = username.title()
-	print(username)
+	try: 
+		username_list = mapper.get_username(email)
+		username = username_list[0][0]
+		username = username.title()
 
-	return username
+
+		return username
+	except:
+		return 'No user found'
 
 
 
@@ -69,6 +73,7 @@ def get_price_by_company(company_name):
 	try: 
 		ticker_symbol = wrapper.get_ticker_symbol(company_name) 
 		last_price = wrapper.get_last_price(ticker_symbol)
+		#last_price = mapper.get_last_price(ticker_symbol)
 	
 		last_price = ("%0.2f" % last_price)
 		return last_price
@@ -94,6 +99,8 @@ def get_price_by_ticker_symbol(ticker_symbol):
 
 	try: 
 		last_price = wrapper.get_last_price(ticker_symbol)
+		#last_price = mapper.get_last_price(ticker_symbol)
+
 	
 		last_price = ("%0.2f" % last_price)
 		return last_price
@@ -149,6 +156,8 @@ def buy(ticker_symbol, trade_volume, username):
 		trade_volume = int(trade_volume)
 		brokerage_fee = 6.95
 		last_price = wrapper.get_last_price(ticker_symbol)
+		#last_price = mapper.get_last_price(ticker_symbol)
+
 
 		# Check to make sure the user has sufficient funds to process the transaction
 		transaction_cost = float((last_price*float(trade_volume))-brokerage_fee)
@@ -196,7 +205,7 @@ def buy(ticker_symbol, trade_volume, username):
 			return error_message 
 
 	except Exception as ex:
-		print(ex)
+		return ex
 
 		
 
@@ -206,6 +215,7 @@ def sell(ticker_symbol, trade_volume, username):
 	try:
 		# Get balance
 		balance = float(mapper.get_balance(username))
+		print("Balance", balance)
 
 		# Assumes the brokerage_fee is required to sell
 		brokerage_fee = 6.95
@@ -214,12 +224,14 @@ def sell(ticker_symbol, trade_volume, username):
 
 		# Check if the user already has the stock in the holdings table
 		holdings_record = mapper.get_holdings_record(username, ticker_symbol) 
+		print("Holdings Record", holdings_record)
 		if len(holdings_record) > 0:
 			amount_of_shares = int(holdings_record[0][1])
 			# Check if the user has enough shares to sell
 			if amount_of_shares >= int(trade_volume):
 				new_balance = float(balance) + float(profit)
 				mapper.update_balance(username, new_balance)
+				print("Balance updated")
 
 				# Get share volume 
 				current_amount_of_shares = int(holdings_record[0][1])
@@ -228,12 +240,15 @@ def sell(ticker_symbol, trade_volume, username):
 				# Record Transaction
 				trans_date = datetime.datetime.now()
 				total = float(trade_volume) * float(last_price)
-				mapper.add_transaction(username,trans_date,'Sell', ticker_symbol,trade_volume,last_price,total)
-				vwap = calculate_vwap(username, ticker_symbol)
-
+				#portfolio_value = float(old_portfolio_value) + float(total)
 				# Update holdings 
 				mapper.update_holdings_record(username,ticker_symbol,cumulative_shares,last_price,vwap)
-				#mapper.update_holdings_record(username,ticker_symbol,cumulative_shares,last_price)
+				portfolio_value = get_portfolio_value(username)
+				# Record transaction
+				mapper.add_transaction(username,trans_date,'Sell',ticker_symbol,trade_volume,last_price,total,portfolio_value)
+				vwap = calculate_vwap(username, ticker_symbol)
+
+				
 
 
 				new_balance = ("%0.2f" %  new_balance)
@@ -248,7 +263,7 @@ def sell(ticker_symbol, trade_volume, username):
 			error_message = 'You do not own have any {0} shares to sell'.format(ticker_symbol)
 			return error_message
 
-	except Exception:
+	except Exception as ex:
 		print(ex)
 
 
@@ -262,16 +277,19 @@ def get_portfolio_value(username):
 	"""
 	#os.system('Clear')
 	holdings = mapper.get_user_holdings(username)
+	print(holdings)
 	stock_values = []
 	for record in holdings:
 		ticker_symbol = record[0]
 		number_of_shares = record[1]
-		current_price = wrapper.get_last_price(ticker_symbol)
+		#current_price = wrapper.get_last_price(ticker_symbol)
+		current_price = mapper.get_last_price(ticker_symbol)
 		current_value = int(number_of_shares) * float(current_price)
 		stock_values.append(current_value)
 
 	sum_of_stocks = (sum(stock_values))
 	sum_of_stocks = "%0.2f" % sum_of_stocks
+	print(sum_of_stocks)
 	
 	return sum_of_stocks
 
@@ -292,7 +310,8 @@ def display_holdings_for_user(username):
 		share_amounts.append(number_of_shares)
 		purchase_price = row[2]
 		purchase_prices.append(purchase_price)
-		last_price = wrapper.get_last_price(ticker_symbol)
+		#last_price = wrapper.get_last_price(ticker_symbol)
+		last_price = mapper.get_last_price(ticker_symbol)
 		last_prices.append(last_price)
 	
 
@@ -416,8 +435,10 @@ def calculate_profit_loss(username):
 		share_amounts.append(number_of_shares)
 		purchase_price = row[2]
 		purchase_prices.append(purchase_price)
-		last_price = wrapper.get_last_price(ticker_symbol)
-		last_prices.append(last_price)
+		#last_price = wrapper.get_last_price(ticker_symbol)
+		last_price = mapper.get_last_price(ticker_symbol)
+		last_price = float(last_price)
+		last_prices.append((last_price))
 
 		price_difference = (last_price - purchase_price) * number_of_shares
 		price_changes.append(price_difference)
@@ -725,26 +746,6 @@ def update_users(selection):
 		pass
 
 
-def get_leaderboard_selection(selection):
-	""" Return the leaderboard based on selection."""
-
-	if selection == str(1):
-		os.system('clear')
-		print("\nTerminal Trader\n")
-		print("\nLeaderboard\n")
-		get_leaderboard_by_portfolio_value()
-		exit = input("Press enter to continue to main menu..")
-	if selection == str(2):
-		os.system('clear')
-		print("\nTerminal Trader\n")
-		print("\nLeaderboard\n")
-		get_leaderboard_by_profit_loss()
-		exit = input("Press enter to continue to main menu..")
-
-	else:
-		pass
-	
-
 
 
 def get_leaderboard_by_portfolio_value():
@@ -753,31 +754,26 @@ def get_leaderboard_by_portfolio_value():
 	leaders = []
 	scores = []
 	users = mapper.get_users()
+
+	print(users)
 	
 	for row in users:
 		user = row[0]
-		leaders.append(user)
-		portfolio_value = get_portfolio_value(user)
+		username = get_username(user)
+		leaders.append(username)
+		portfolio_value = get_portfolio_value(user)	
 		portfolio_value = float(portfolio_value)
 		scores.append(portfolio_value)
-
+		print("Appending score:", portfolio_value, type(portfolio_value))
 		
-
-	return leaders, scores
-	#Organize accounts in dataframe
-	# data = [leaders, scores]
-	# df = pd.DataFrame(data)
-	# if df.empty == True:
-	# 	print("\n","\nNo leaders.\n")
-	# else:
-	# 	df1 = df.transpose()
-	# 	df1.columns = ['User','Score']
-	# 	df2 = df1.sort_values(by=['Score'],ascending=False)
-	# 	df2.shift()[1:]
-	# 	df3 = df2.head(10)
-	# 	df4 = df3.to_string(index=False).center(80)
-	# 	print("\n\n", df4,"\n\n")
 	
+	#leaderboard = sorted(zip(leaders,scores),reverse=True)
+	zipped = zip(leaders,scores)
+	leaderboard = sorted(zipped, key=lambda x: float(x[1]),reverse=True)
+
+
+
+	return leaderboard
 
 
 
@@ -791,41 +787,65 @@ def get_leaderboard_by_profit_loss():
 	
 	for row in users:
 		user = row[0]
-		leaders.append(user)
+		username = get_username(user)
+		leaders.append(username)
 		scores.append(calculate_profit_loss(user))
 
-		
-	#Organize accounts in dataframe
-	data = [leaders, scores]
-	df = pd.DataFrame(data)
-	if df.empty == True:
-		print("\n","\nNo leaders.\n")
-	else:
-		df1 = df.transpose()
-		df1.columns = ['User','Score']
-		df2 = df1.sort_values(by=['Score'],ascending=False)
-		df2.shift()[1:]
-		df3 = df2.head(10)
-		df4 = df3.to_string(index=False).center(80)
-		print("\n\n", df4,"\n\n")
+	#profitloss = sorted(zip(leaders,scores),reverse=True)
+	zipped = zip(leaders,scores)
+	profitloss = sorted(zipped, key=lambda x: x[1],reverse=True)
+
+	return profitloss
+
+
+
+def get_top_ten_stocks():
+
+ 
+	all_holdings = mapper.get_all_holdings_records()
+
+	holdings = {}
+
+	total = 0
+
+	percentages = []
+
+	stock_shares = []
+
+	for row in all_holdings:
+		ticker_symbol = row[0]
+		print("Ticker symbol: ", ticker_symbol)
+		volume = row[1]
+		total += volume
+		print("Volume: ",volume)
+		if ticker_symbol in holdings:
+			existing_volume = holdings[ticker_symbol]
+			print("Existing volume: ",existing_volume)
+			new_volume = volume + int(existing_volume)
+			holdings[ticker_symbol] = new_volume
+		else:
+			holdings[ticker_symbol] = volume
+
+
+	print(holdings)
+
 	
+	sorted_holdings = sorted(holdings, key=holdings.get, reverse=True)
+	print(sorted_holdings)
+	top_ten_stocks = sorted_holdings[:5]
+
+	for stock in top_ten_stocks:
+		shares = holdings[stock]
+		stock_shares.append(shares)
+		print("{0}: ".format(holdings[stock]),shares)
+		percentage = int((shares/total) * 100)
+		print(percentage)
+		percentages.append(percentage)
+
+	return top_ten_stocks, stock_shares, percentages 
 
 
 
-def make_dataframe(*arg):
-	data = []
-	for argument in arg:
-		data.append(argument)
-
-	df = pd.DataFrame(data)
-	if df.empty == True:
-		print("\n","\nNo data\n")
-	else:
-		df1 = df.transpose()
-		for argument in arg:
-			#TODO: Figure out how to assign column names
-			df1.columns.append(argument)
-		print("\n\n", df1.to_string(),"\n\n")
 
 
 def login(username,password):
@@ -854,6 +874,7 @@ def login(username,password):
 	return admin,username
 
 
+
 def check_for_admin(username, password):
 	users = mapper.get_admin(username)
 
@@ -864,6 +885,7 @@ def check_for_admin(username, password):
 		if username == admin_username and admin_password == admin_password: 
 			return True
 			
+
 
 def create_account():
 	""" Create a new account. """
@@ -888,6 +910,7 @@ def create_account():
 		print("There was an error creating the user account")
 
  
+
 
 if __name__ == '__main__':
 	#get_leaderboard()

@@ -10,6 +10,9 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/local.css') }}" />
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+
     <script type="text/javascript" src="static/scripts/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="static/scripts/bootstrap.min.js"></script>
 
@@ -84,22 +87,24 @@
         </nav>
  -->
      <div class="row" style="center">
+         <div class="col-md-10" class="btn btn-info">
+            <a href="{{ url_for('general.show_login') }}">Return to Login</a>
+        </div>
                 <div class="col-lg-12">
             <h2>Create an Account </h2>
             <br>
+
     <form class="form-inline" role="form"  action ="/register/" method ="POST">
         <div class="form-group">
             <label for="username" class="col-md-4">
                 Username:
             </label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username">
-                <i class="fa fa-lock fa-2x"></i>  
             <br><br>     
             <label for="emailaddress" class="col-md-4">
                 Email address:
             </label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address">
-                <i class="fa fa-lock fa-2x"></i>
             <br><br> 
             <label for="password" class="col-md-4">
                 Password:
@@ -173,10 +178,12 @@
                     Register
                 </button>
             </div>
+
         </div>
     </div>  
     </div>
 </div>
+
     </form>
 
 {% if validation == true %}
@@ -187,6 +194,7 @@
             </div>
           </div>
     {% endif %}
+
 
 </body>
 </html>

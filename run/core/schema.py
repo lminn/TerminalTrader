@@ -62,6 +62,13 @@ cursor.execute(
 	);"""
 )
 
+cursor.execute(
+	"""CREATE TABLE IF NOT EXISTS stocks(
+	ticker_symbol TEXT,
+	stock_price REAL,
+	last_update TEXT
+	);"""
+)
 
 connection.commit()
 cursor.close()

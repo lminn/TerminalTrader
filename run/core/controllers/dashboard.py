@@ -13,12 +13,14 @@ def show_dashboard():
 	user_login = model.get_username(username)
 
 
-	leaders, scores = model.get_leaderboard_by_portfolio_value()
+	leaderboard = model.get_leaderboard_by_portfolio_value()
 
+	profitloss = model.get_leaderboard_by_profit_loss()
 
-	leaderbord = zip(leaders, scores)
+	top_stocks, shares, percentages = model.get_top_ten_stocks()
 
-	return render_template('homepage.html', leaderbord=leaderbord, user_login=user_login)
+	return render_template('homepage.html',  user_login=user_login, leaderboard=leaderboard, profitloss=profitloss,top_stocks=sorted(zip(percentages,top_stocks,shares),reverse=True))
+
 
 
 

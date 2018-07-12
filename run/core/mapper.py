@@ -32,7 +32,7 @@ def add_new_user(username,email,password,country,gender):
 
 
 
-def get_holdings_record(username, ticker_symbol):
+def get_holdings_record(email, ticker_symbol):
     """ Return a record for the given company from the holdings table."""
 
     connection, cursor = connect_db()
@@ -40,8 +40,19 @@ def get_holdings_record(username, ticker_symbol):
                     number_of_shares 
                     FROM holdings 
                     WHERE ticker_symbol='{0}' 
-                    AND username='{1}';""".format(ticker_symbol, username))
+                    AND username='{1}';""".format(ticker_symbol, email))
                     
+    holdings_record = cursor.fetchall()
+    disconnect_db(connection,cursor)
+
+    return holdings_record
+
+
+def get_all_holdings_records():
+    """ Return all records from the holdings table."""
+
+    connection, cursor = connect_db()
+    cursor.execute("SELECT ticker_symbol, number_of_shares FROM holdings;")         
     holdings_record = cursor.fetchall()
     disconnect_db(connection,cursor)
 
@@ -101,7 +112,7 @@ def add_holdings_record(ticker_symbol,trade_volume,purchase_price,username):
 #     disconnect_db(connection,cursor)
 
 
-def update_holdings_record(username,ticker_symbol,trade_volume,purchase_price,vwap):
+def update_holdings_record(email,ticker_symbol,trade_volume,purchase_price,vwap):
     """ Update a record in the holdings table for given user name an company. """
 
     connection, cursor = connection, cursor = connect_db()
@@ -109,10 +120,10 @@ def update_holdings_record(username,ticker_symbol,trade_volume,purchase_price,vw
                         purchase_price={purchase_price},
                         volume_weighted_average_price={vwap}
                         WHERE ticker_symbol='{ticker_symbol}'
-                        AND username='{username}';""".format(
+                        AND username='{email}';""".format(
                             trade_volume=trade_volume,
                             ticker_symbol=ticker_symbol,
-                            username=username,
+                            email=email,
                             purchase_price=purchase_price,
                             vwap=vwap))
     disconnect_db(connection,cursor)
@@ -216,7 +227,7 @@ def get_transactions_by_date(date):
     return transactions
 
 
-def add_transaction(username,trans_date,trans_type,ticker_symbol,volume,stock_price,total_amount,new_balance):
+def add_transaction(email,trans_date,trans_type,ticker_symbol,volume,stock_price,total_amount,new_balance):
     """ Insert a new record into the transaction table."""
 
     connection, cursor = connect_db()
@@ -235,14 +246,14 @@ def add_transaction(username,trans_date,trans_type,ticker_symbol,volume,stock_pr
                         {volume},
                         {stock_price},
                         {total_amount},
-                        '{username}',
+                        '{email}',
                         {new_balance});""".format(trans_date=trans_date,
                             trans_type=trans_type,
                             ticker_symbol=ticker_symbol,
                             volume=volume,
                             stock_price=stock_price,
                             total_amount=total_amount,
-                            username=username,
+                            email=email,
                             new_balance=new_balance))
     disconnect_db(connection,cursor)
 
@@ -281,29 +292,52 @@ def get_holdings_by_ticker_symbol(ticker_symbol):
     return holdings
 
 
-def get_balance(username):
-	""" Reuturn the current balance for the user."""
-	try:
-		connection, cursor = connect_db()
-		cursor.execute("SELECT balance FROM users WHERE username='{username}';".format(username=username))
-		user_balance = cursor.fetchall()[0][0]
-		user_balance = "%0.2f" % user_balance
-		disconnect_db(connection,cursor)
-	
-		if user_balance is None:
-			user_balance = 10000
+def get_balance(email):
+    """ Reuturn the current balance for the user."""
 
-		return user_balance 
+    try:
+        connection, cursor = connect_db()
+        cursor.execute("SELECT balance FROM users WHERE email='{email}';".format(email=email))
+        user_balance = cursor.fetchall()[0][0]
+        user_balance = "%0.2f" % user_balance
+        disconnect_db(connection,cursor)
 
-	except Exception:
-		print("There was an error fetching the balance")
+        if user_balance is None:
+            user_balance = 10000
+
+        return user_balance 
+
+    except Exception:
+        print("There was an error fetching the balance")
 
 
-def update_balance(username, new_balance):
+def get_last_price(ticker_symbol):
+    """ Reuturn the last recorded price for a given stock."""
+
+    try:
+        connection, cursor = connect_db()
+        cursor.execute("SELECT stock_price FROM stocks WHERE ticker_symbol='{ticker_symbol}';".format(ticker_symbol=ticker_symbol))
+        last_price = cursor.fetchall()[0][0]
+        last_price = "%0.2f" % last_price
+        disconnect_db(connection,cursor)
+
+        if last_price is None:
+            last_price = 10000
+
+        print("Last PRICE: ",last_price)
+        return last_price
+
+    except Exception:
+        print("There was an error fetching the last price")
+        last_price = 0.0
+        return last_price
+
+
+def update_balance(email, new_balance):
     """ Update the balance in the users table."""
 
     connection, cursor = connect_db()
-    cursor.execute("UPDATE users SET balance = {0} WHERE username='{1}';".format(new_balance,username))
+    cursor.execute("UPDATE users SET balance = {0} WHERE email='{1}';".format(new_balance,email))
     disconnect_db(connection,cursor)
 
 
@@ -344,7 +378,7 @@ def get_users():
     """ Returns all users in the table."""
     
     connection, cursor = connect_db()
-    cursor.execute("SELECT username FROM users;")
+    cursor.execute("SELECT email FROM users;")
     usernames = cursor.fetchall()
     disconnect_db(connection,cursor)
 

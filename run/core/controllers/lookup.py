@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, g, session
 
 from core import model 
 
@@ -10,6 +10,8 @@ controller = Blueprint('lookup',__name__,url_prefix='/lookup')
 @controller.route('/',methods=['GET', 'POST'])
 def show_lookup():
 	if request.method == 'POST':
+		username = g.user
+		user_login = model.get_username(username)
 		company = request.form["company"]
 
 		#ticker_symbol = model.get_ticker_symbol(company)
@@ -23,6 +25,16 @@ def show_lookup():
 		except Exception: 
 			pass
 
-		return render_template('lookup.html', company_details=company_details, open_prices=open_prices, labels=labels)
+		return render_template('lookup.html',user_login=user_login,company_details=company_details, open_prices=open_prices, labels=labels)
 	else:
-		return render_template('lookup.html')
+		username = g.user
+		user_login = model.get_username(username)
+
+
+		return render_template('lookup.html', user_login=user_login)
+
+@controller.before_request
+def before_request():
+	g.user = None
+	if 'user' in session:
+		g.user = session['user']
